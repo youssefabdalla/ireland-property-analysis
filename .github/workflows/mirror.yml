@@ -12,7 +12,7 @@ permissions:
 jobs:
   mirror:
   runs-on: ubuntu-latest
-    steps:
+  steps:
       # 1. Checkout the code from GitHub
       - name: Checkout Code
         uses: actions/checkout@v4
