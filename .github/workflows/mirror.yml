@@ -13,37 +13,37 @@ jobs:
   mirror:
   runs-on: ubuntu-latest
   steps:
-      # 1. Checkout the code from GitHub
-      - name: Checkout Code
-        uses: actions/checkout@v4
-        with:
-          # Fetch all history, branches, and tags for a proper mirror
-          fetch-depth: 0
+    # 1. Checkout the code from GitHub
+    - name: Checkout Code
+      uses: actions/checkout@v4
+      with:
+      # Fetch all history, branches, and tags for a proper mirror
+      fetch-depth: 0
 
-      # 2. Configure AWS Credentials using OIDC
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          # This is the ARN of the secure role you created
-          role-to-assume: ${{ secrets.AWS_OIDC_DEPLOY_ROLE_ARN }}
-          aws-region: eu-west-1 # my region from aws
+    # 2. Configure AWS Credentials using OIDC
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        # This is the ARN of the secure role you created
+        role-to-assume: ${{ secrets.AWS_OIDC_DEPLOY_ROLE_ARN }}
+        aws-region: eu-west-1 # my region from aws
 
-      # 3. Configure Git to use the AWS Credential Helper
-      - name: Configure Git for CodeCommit
-        run: |
-          # This tells Git to use the AWS CLI to sign requests to CodeCommit
-          git config --global credential.helper '!aws codecommit credential-helper $@'
-          git config --global credential.UseHttpPath true
+    # 3. Configure Git to use the AWS Credential Helper
+    - name: Configure Git for CodeCommit
+      run: |
+        # This tells Git to use the AWS CLI to sign requests to CodeCommit
+        git config --global credential.helper '!aws codecommit credential-helper $@'
+        git config --global credential.UseHttpPath true
 
-      # 4. Push the Code (Mirror)
-      - name: Mirror to CodeCommit
-        run: |
-          # Define the CodeCommit remote
-          CODECOMMIT_URL="https://git-codecommit.eu-north-1.amazonaws.com/v1/repos/ireland-property-analysis"
+    # 4. Push the Code (Mirror)
+    - name: Mirror to CodeCommit
+      run: |
+        # Define the CodeCommit remote
+        CODECOMMIT_URL="https://git-codecommit.eu-north-1.amazonaws.com/v1/repos/ireland-property-analysis"
           
-          # Since the repository is already checked out, we add a new remote called 'codecommit'
-          git remote add codecommit $CODECOMMIT_URL
+        # Since the repository is already checked out, we add a new remote called 'codecommit'
+        git remote add codecommit $CODECOMMIT_URL
           
-          # Push all branches, tags, and commits to the CodeCommit remote
-          git push --all codecommit
-          git push --tags codecommit
+        # Push all branches, tags, and commits to the CodeCommit remote
+        git push --all codecommit
+        git push --tags codecommit
