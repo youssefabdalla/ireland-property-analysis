@@ -32,7 +32,7 @@ jobs:
         with:
           # This is the ARN of the secure role you created
           role-to-assume: ${{ secrets.AWS_OIDC_DEPLOY_ROLE_ARN }}
-          aws-region: eu-west-1 # my region from aws
+          aws-region: eu-north-1 # my region from aws
 
       # 3. Configure Git to use the AWS Credential Helper
       - name: Configure Git for CodeCommit
