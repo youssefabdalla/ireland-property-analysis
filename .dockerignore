@@ -1,0 +1,33 @@
+# --- Git ---
+.git
+.gitignore
+
+# --- Data (The most important for you!) ---
+# Ignore raw and processed data folders so we don't bloat the image
+data/
+*.csv
+*.json
+*.sqlite
+
+# --- Python & Poetry ---
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# --- Environment & Secrets ---
+.env
+.python-version
+
+# --- IDEs & OS ---
+.vscode/
+.devcontainer/
+.DS_Store
+Thumbs.db
+
+# --- Docker ---
+Dockerfile
+.dockerignore
