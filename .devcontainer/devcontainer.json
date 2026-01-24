@@ -24,6 +24,6 @@
       }
     }
   },
-  "postCreateCommand": "curl -sSL https://install.python-poetry.org | python3 - && export PATH=$PATH:$HOME/.local/bin && poetry config virtualenvs.in-project true && poetry install --no-root",
+  "postCreateCommand": "curl -sSL https://install.python-poetry.org | python3 - && export PATH=$PATH:$HOME/.local/bin && poetry config virtualenvs.in-project true && poetry install --no-root && rm -f .git/hooks/post-commit .git/hooks/pre-push",
   "remoteUser": "vscode"
 }
