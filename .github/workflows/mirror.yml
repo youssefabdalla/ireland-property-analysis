@@ -4,7 +4,13 @@ on:
     # Trigger the mirror workflow on every push to any branch
     branches:
       - '**'
-
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Reason for this trigger'
+        required: true
+        default: 'manual trigger'
+        type: string
 permissions:
   id-token: write  # Required for OIDC to fetch the token
   contents: read   # Required to check out the code
