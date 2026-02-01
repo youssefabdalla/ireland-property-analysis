@@ -365,6 +365,33 @@ test = ["hypothesis (>=6.46.1)", "pytest (>=7.3.2)", "pytest-xdist (>=2.2.0)"]
 xml = ["lxml (>=4.9.2)"]
 
 [[package]]
+name = "pip"
+version = "26.0"
+description = "The PyPA recommended tool for installing Python packages."
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "pip-26.0-py3-none-any.whl", hash = "sha256:98436feffb9e31bc9339cf369fd55d3331b1580b6a6f1173bacacddcf9c34754"},
+    {file = "pip-26.0.tar.gz", hash = "sha256:3ce220a0a17915972fbf1ab451baae1521c4539e778b28127efa79b974aff0fa"},
+]
+
+[[package]]
+name = "pip-system-certs"
+version = "5.3"
+description = "Automatically configures Python to use system certificates via truststore"
+optional = false
+python-versions = ">=3.10"
+groups = ["main"]
+files = [
+    {file = "pip_system_certs-5.3-py3-none-any.whl", hash = "sha256:3fbb5de62e374a99b688b1ad06e64ee5c4aeb633ef23e3a677d32e3e84fd863c"},
+    {file = "pip_system_certs-5.3.tar.gz", hash = "sha256:19c8bf9957bcce7d69c4dbc2d0b2ef13de1984d53f50a59012e6dbbad0af67c6"},
+]
+
+[package.dependencies]
+pip = ">=24.2"
+
+[[package]]
 name = "pyogrio"
 version = "0.12.1"
 description = "Vectorized spatial vector file format I/O using GDAL/OGR"
@@ -664,4 +691,4 @@ zstd = ["backports-zstd (>=1.0.0) ; python_version < \"3.14\""]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12"
-content-hash = "3b7ef087f3195c20bc73edbe5f1137605f0ffb500cb5df06f83778c6c7d627f1"
+content-hash = "909ec9ac1249ce8b97cd7a3620dc44c74e1a5cdeea627146eb784bb4183f110b"
