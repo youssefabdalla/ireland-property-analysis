@@ -6,7 +6,7 @@ authors = ["youssef abdalla <yorahman@gmail.com>"]
 package-mode = false
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = ">=3.12,<3.14" # because i want to use great expectations
 pandas = "^2.2.0"
 geopandas = "^1.0.0"
 requests = "^2.31.0"
@@ -14,6 +14,7 @@ certifi = "^2026.1.4"
 pip-system-certs = "^5.3"
 deepparse = "^0.9.14"
 numpy = "<2.0.0"
+great-expectations = ">=0.18,<1.0"
 
 [tool.poetry.group.dev.dependencies]
 jupyter = "^1.1.1"
