@@ -14,7 +14,6 @@ certifi = "^2026.1.4"
 pip-system-certs = "^5.3"
 deepparse = "^0.9.14"
 numpy = "<2.0.0"
-great-expectations = ">=0.18,<1.0"
 
 [tool.poetry.group.dev.dependencies]
 jupyter = "^1.1.1"
