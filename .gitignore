@@ -209,3 +209,7 @@ __marimo__/
 ## data and Jupyter
 data/
 .ipynb_checkpoints/
+# Great Expectations
+gx/uncommitted/
+gx/plugins/
+gx/checkpoints/
