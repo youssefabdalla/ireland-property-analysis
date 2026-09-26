@@ -9,8 +9,8 @@ SRC = ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
-from exceptions import PropertyRawDataValidationError
-from schema import RawPropertyListing
+from ireland_property_analysis.exceptions import PropertyRawDataValidationError
+from ireland_property_analysis.schema import RawPropertyListing
 
 
 @pytest.fixture

@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from datetime import date
 
-from exceptions import PropertyRawDataValidationError
+from ireland_property_analysis.exceptions import PropertyRawDataValidationError
 
 
 @dataclass(frozen=True, init=False)

@@ -28,5 +28,6 @@
     "PYTHONPATH": "${containerWorkspaceFolder}"
 },
   "postCreateCommand": "bash ./scripts/bootstrap.sh",
+  "postStartCommand": "bash ./scripts/bootstrap.sh",
   "remoteUser": "vscode"
 }
