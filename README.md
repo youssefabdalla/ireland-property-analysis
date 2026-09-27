@@ -72,3 +72,8 @@ Example values from the project context:
 - Property Size Description: greater than 125 sq metres
 
 This project is still under active development.
+
+## Data sources:
+
+1. sales from here: https://www.propertypriceregister.ie/website/npsra/ppr/npsra-ppr.nsf/Downloads/PPR-ALL.zip/$FILE/PPR-ALL.zip
+2. Rent from here: https://rtb.ie/data-insights/rtb-data-hub/rtb-esri-rent-index-data-set

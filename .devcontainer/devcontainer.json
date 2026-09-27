@@ -6,6 +6,9 @@
       "configureZshAsDefaultShell": true
     }
   },
+  "containerEnv": {
+    "POETRY_VIRTUALENVS_IN_PROJECT": "true"
+  },
   "customizations": {
     "vscode": {
       "extensions": [
@@ -28,5 +31,6 @@
     "PYTHONPATH": "${containerWorkspaceFolder}"
 },
   "postCreateCommand": "bash ./scripts/bootstrap.sh",
+  "postStartCommand": "bash ./scripts/bootstrap.sh",
   "remoteUser": "vscode"
 }
