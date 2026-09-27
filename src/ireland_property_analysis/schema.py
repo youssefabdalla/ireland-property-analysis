@@ -25,7 +25,7 @@ class RawPropertyListing:
         self,
         date_of_sale: date,
         county: str,
-        price: float,
+        price: str,
         description: str,
         *,
         id: str = "",
@@ -38,7 +38,9 @@ class RawPropertyListing:
         if (date_of_sale is None) or (county is None) or (price is None) or (description is None):
             raise PropertyRawDataValidationError(
                 "date_of_sale, county, price, and description must not be None")
-
+        if price is price.isspace() or price == "":
+            raise PropertyRawDataValidationError(
+                "price must be a non-empty string")
         object.__setattr__(self, "id", id)
         object.__setattr__(self, "date_of_sale", date_of_sale)
         object.__setattr__(self, "address", address)

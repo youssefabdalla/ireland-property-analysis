@@ -6,6 +6,9 @@
       "configureZshAsDefaultShell": true
     }
   },
+  "containerEnv": {
+    "POETRY_VIRTUALENVS_IN_PROJECT": "true"
+  },
   "customizations": {
     "vscode": {
       "extensions": [

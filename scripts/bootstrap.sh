@@ -46,7 +46,7 @@ fi
 rm -rf .venv
 poetry env use "$PYTHON_BIN"
 poetry config virtualenvs.in-project true
-poetry install --with dev --no-root
+poetry install --with dev
 
 # Keep your existing repo hook cleanup
 rm -f .git/hooks/post-commit .git/hooks/pre-push

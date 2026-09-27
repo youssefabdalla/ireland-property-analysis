@@ -3,7 +3,7 @@ name = "ireland-property-analysis"
 version = "0.1.0"
 description = "Property price and BER analysis for Ireland"
 authors = ["youssef abdalla <yorahman@gmail.com>"]
-package-mode = true
+package-mode = true # because i want to use utils in notebooks
 
 [tool.poetry.dependencies]
 python = ">=3.12,<3.14" # because i want to use great expectations
@@ -16,6 +16,7 @@ jupyter = "^1.1.1"
 ipykernel = "^7.1.0"
 
 [tool.pytest.ini_options]
+pythonpath = ["src"]
 python_files = [
     "*_test.py",
     "*_tests.py",
