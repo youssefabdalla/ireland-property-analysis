@@ -7,16 +7,16 @@ This project is still in progress. The core project structure, environment boots
 
 ## What has been implemented so far
 
-### 1) Environment bootstrap and portability
-The repository includes a reproducible devcontainer configuration in [.devcontainer/devcontainer.json](.devcontainer/devcontainer.json) and a bootstrap script in [scripts/bootstrap.sh](scripts/bootstrap.sh).
+### 1) Environment setup
+Use [scripts/bootstrap.sh](scripts/bootstrap.sh) to set up the local Python environment. It requires Python 3.12 or 3.13, installs Poetry if needed, and uses the tracked `poetry.lock` to install the project and development dependencies into `.venv`. The script checks for a valid existing environment and recreates it if it is missing or broken.
 
-The bootstrap flow ensures the project can be recreated reliably across machines and environments:
-- it installs Poetry if needed
-- it checks whether the in-project venv is valid
-- it verifies Python is version 3.12 and that pytest is available
-- if the environment is broken or missing, it recreates the virtual environment and reinstalls dependencies
+From the repository root, run:
 
-This makes the setup more portable and resilient when the Poetry environment becomes stale, broken, or missing.
+```bash
+./scripts/bootstrap.sh
+```
+
+Activate the environment with `source .venv/bin/activate`. To run the tests, use `pytest`.
 
 ### 2) Property validation and custom exceptions
 The project now contains a custom validation hierarchy in [src/exceptions.py](src/exceptions.py):
@@ -43,7 +43,7 @@ The fixture-based approach keeps the tests readable and makes it easy to reuse a
 ## Issues fixed by these changes
 1. Bootstrap now handles a broken or invalid Poetry virtual environment by checking its health and rebuilding it if needed.
 2. Validation exceptions are raised when property data is missing critical fields such as the sale date or price.
-3. The devcontainer setup makes the project easier to run consistently across environments and machines.
+3. The bootstrap script makes the Python environment easier to recreate consistently.
 4. The schema is frozen to prevent accidental mutation of processed raw data.
 5. The project structure is now ready for continued development and validation work.
 

@@ -13,7 +13,7 @@ try:
     import pytest
 except Exception:
     raise SystemExit(1)
-if not (sys.version_info[:2] >= (3, 12) and sys.version_info[:2] < (3, 13)):
+if not ((3, 12) <= sys.version_info[:2] < (3, 14)):
     raise SystemExit(1)
 PY
   then
@@ -31,15 +31,18 @@ fi
 
 # Use a real interpreter before recreating the venv
 PYTHON_BIN=""
-for candidate in python3.12 python3; do
+for candidate in python3.13 python3.12 python3; do
   if command -v "$candidate" >/dev/null 2>&1; then
-    PYTHON_BIN="$(command -v "$candidate")"
-    break
+    candidate_path="$(command -v "$candidate")"
+    if "$candidate_path" -c 'import sys; raise SystemExit(0 if (3, 12) <= sys.version_info[:2] < (3, 14) else 1)'; then
+      PYTHON_BIN="$candidate_path"
+      break
+    fi
   fi
 done
 
 if [ -z "$PYTHON_BIN" ]; then
-  echo "No supported Python interpreter found. Need Python 3.12."
+  echo "No supported Python interpreter found. Need Python 3.12 or 3.13."
   exit 1
 fi
 
