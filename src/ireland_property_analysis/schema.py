@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from datetime import date
+from decimal import Decimal
 
 from ireland_property_analysis.exceptions import PropertyRawDataValidationError
 
@@ -15,7 +16,7 @@ class RawPropertyListing:
     address: str = ""
     county: str = ""
     eircode: str = ""
-    price: float | None = None
+    price: Decimal | None = None
     is_vat_exclusive: bool = False
     description: str = ""
     size_description: str = ""
@@ -51,3 +52,34 @@ class RawPropertyListing:
         object.__setattr__(self, "description", description)
         object.__setattr__(self, "size_description", size_description)
         object.__setattr__(self, "is_full_market_price", is_full_market_price)
+
+class CleanedPropertyListing:
+    """
+    Represents a cleaned property listing with basic information as from
+    [the irish property register](https://www.propertyregister.ie)
+    """
+    id: str = ""
+    date_of_sale: date
+    address: str = ""
+    county: str = ""
+    eircode: str = ""
+    price: Decimal
+    is_vat_exclusive: bool = False
+    description: str = ""
+    size_description: str = ""
+    is_full_market_price: bool = True
+    price_per_sq_m: Decimal
+    def __init__(
+        self,
+        date_of_sale: date,
+        county: str,
+        price: Decimal,
+        description: str,
+        *,
+        id: str = "",
+        address: str = "",
+        eircode: str = "",
+        is_vat_exclusive: bool = False,
+        size_description: str = "",
+        is_full_market_price: bool = True,
+    ):
