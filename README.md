@@ -2,6 +2,16 @@
 
 Analysis of publicly available Irish property data for validation, cleaning, and price-related exploration.
 
+## About
+
+This is a personal portfolio project that explores public Irish property data. I’m building it step by step to improve my Python, AI/ML, AWS, and software delivery skills.
+
+
+The first goal is a tested Python pipeline that cleans property data and explains data-quality problems. I’ll then add a small Streamlit app, compare simple analysis with a local ML model, and run a container-based demo on AWS.
+
+
+I’m learning from written guides and writing the code myself. AI tools help me understand errors and review my work. Results are for learning and exploration; an unusual value does not prove fraud.
+
 ## Project status
 This project is still in progress. The core project structure, environment bootstrap, validation rules, and initial test coverage are in place, but the dataset processing and analysis pipeline is still being expanded.
 
