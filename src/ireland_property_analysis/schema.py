@@ -1,53 +1,83 @@
 from dataclasses import dataclass
 from datetime import date
+from decimal import Decimal
 
 from ireland_property_analysis.exceptions import PropertyRawDataValidationError
 
 
-@dataclass(frozen=True, init=False)
+@dataclass(frozen=True, kw_only=True)
 class RawPropertyListing:
     """
     Represents a raw property listing with basic information as from
     [the irish property register](https://www.propertyregister.ie)
     """
+
+    date_of_sale: date
+    county: str
+    price: str
+    description: str
     id: str = ""
-    date_of_sale: date | None = None
     address: str = ""
-    county: str = ""
-    eircode: str = ""
-    price: float | None = None
     is_vat_exclusive: bool = False
-    description: str = ""
     size_description: str = ""
     is_full_market_price: bool = True
 
-    def __init__(
-        self,
-        date_of_sale: date,
-        county: str,
-        price: str,
-        description: str,
-        *,
-        id: str = "",
-        address: str = "",
-        eircode: str = "",
-        is_vat_exclusive: bool = False,
-        size_description: str = "",
-        is_full_market_price: bool = True,
-    ):
-        if (date_of_sale is None) or (county is None) or (price is None) or (description is None):
+    def __post_init__(self):
+        if self.price.isspace() or not self.price:
+            raise PropertyRawDataValidationError("price cannot be empty or whitespace")
+
+
+@dataclass(frozen=True, kw_only=True)
+class CleanedPropertyListing:
+    """
+    Represents a cleaned property listing with basic information as from
+    [the irish property register](https://www.propertyregister.ie)
+    """
+
+    id: str
+    date_of_sale: date
+    county: str
+    price: Decimal
+    price_per_sq_m: Decimal
+    description: str = ""
+    address: str = ""
+    is_vat_exclusive: bool = False
+    size_description: str = ""
+    is_full_market_price: bool = True
+
+    def __post_init__(self):
+        if self.price <= 0:
+            raise PropertyRawDataValidationError("price must be greater than 0")
+        if self.price_per_sq_m <= 0:
             raise PropertyRawDataValidationError(
-                "date_of_sale, county, price, and description must not be None")
-        if price is price.isspace() or price == "":
-            raise PropertyRawDataValidationError(
-                "price must be a non-empty string")
-        object.__setattr__(self, "id", id)
-        object.__setattr__(self, "date_of_sale", date_of_sale)
-        object.__setattr__(self, "address", address)
-        object.__setattr__(self, "county", county)
-        object.__setattr__(self, "eircode", eircode)
-        object.__setattr__(self, "price", price)
-        object.__setattr__(self, "is_vat_exclusive", is_vat_exclusive)
-        object.__setattr__(self, "description", description)
-        object.__setattr__(self, "size_description", size_description)
-        object.__setattr__(self, "is_full_market_price", is_full_market_price)
+                "price_per_sq_m must be greater than 0"
+            )
+
+
+@dataclass(frozen=True)
+class RawRecordProcessOutcome:
+    """
+    Represents the outcome of processing raw records.
+    Attributes:
+        row_number (str): The row number of the processed record.
+        outcome (CleanedPropertyListing | PropertyRawDataValidationError): The outcome of the processing operation.
+    """
+
+    row_number: str
+    outcome: CleanedPropertyListing | PropertyRawDataValidationError
+
+@dataclass(frozen=True)
+class IngestionRunReport:
+    """
+    Represents the outcome of an ingestion run.
+    Attributes:
+        total_records (int): The total number of records processed.
+        successful_records (int): The number of successfully processed records.
+        failed_records (int): The number of failed records.
+        errors (dict[str, PropertyRawDataValidationError]): A dictionary of errors encountered during processing.
+    """
+
+    total_records: int
+    successful_records: int
+    failed_records: int
+    errors: dict[str, PropertyRawDataValidationError]

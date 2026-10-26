@@ -18,8 +18,7 @@ def get_root_dir() -> Path:
                 return directory
 
     searched_from = ", ".join(str(path) for path in start_dirs)
-    raise FileNotFoundError(
-        f"Could not find project root from {searched_from}")
+    raise FileNotFoundError(f"Could not find project root from {searched_from}")
 
 
 def get_file_encoding(path: str) -> str:
@@ -31,7 +30,7 @@ def get_file_encoding(path: str) -> str:
     from charset_normalizer import from_path
 
     match = from_path(path).best()
-    return match.encoding
+    return match.encoding if match else "utf-8"
 
 
 def parse_currency(price_str: str | None) -> Decimal:
@@ -59,7 +58,7 @@ def adjust_price_for_vat(price: Decimal, vat_exclusive: bool) -> Decimal:
         decimal.Decimal: The adjusted price.
     """
     if vat_exclusive:
-        return price * Decimal('1.135')  # Apply VAT (assuming 13.5% VAT rate)
+        return price * Decimal("1.135")  # Apply VAT (assuming 13.5% VAT rate)
     return price
 
 
@@ -74,8 +73,7 @@ def parse_sqm(raw_area: str) -> Decimal:
         PropertyRawDataValidationError: If the raw_area is None, empty, or does not contain a valid number.
     """
     if not raw_area:
-        raise PropertyRawDataValidationError(
-            "raw_area must not be None or empty")
+        raise PropertyRawDataValidationError("raw_area must not be None or empty")
 
     # Use regex to find the first occurrence of a number (integer or decimal)
     match = re.search(r"[0-9]+\.?[0-9]*", raw_area)
