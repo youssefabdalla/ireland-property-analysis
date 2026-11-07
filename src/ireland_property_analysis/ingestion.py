@@ -4,51 +4,72 @@ from pathlib import Path
 
 from dateutil import parser as date_parser
 
+from ireland_property_analysis.exceptions import PropertyRawDataValidationError
 from ireland_property_analysis.schema import (
     CleanedPropertyListing,
     IngestionRunReport,
+    ListingProcessingOutcome,
     RawPropertyListing,
-    RawRecordProcessOutcome,
 )
 
-from .utils import *
+from .utils import (
+    adjust_price_for_vat,
+    detect_file_encoding,
+    parse_area_sqm,
+    parse_currency,
+)
 
 
-def stream_raw_records(file_path: str) -> Iterator[dict[str, str | None]]:
-    """
-    Stream raw records from a CSV file.
-    Args:
-        file_path (str): The path to the CSV file.
-    Yields:
-        dict: A dictionary representing a single record from the CSV file.
-    """
-    # Ensure the file encoding is determined
-    encoding = get_file_encoding(file_path)
-    with open(Path(file_path), "r", encoding=encoding) as csvfile:
+def iter_raw_csv_rows(file_path: str | Path) -> Iterator[dict[str, str | None]]:
+    """Yield CSV rows as dictionaries and add each row's file line number."""
+    encoding = detect_file_encoding(file_path)
+    with open(file_path, "r", encoding=encoding) as csvfile:
         reader = csv.DictReader(csvfile)
         for row_number, row in enumerate(reader, start=2):
             row["id"] = str(row_number)
             yield row
 
 
-def process_raw_record(raw_record: dict) -> RawPropertyListing:
-    """
-    Process a raw record and convert it into a RawPropertyListing.
-    Args:
-        raw_record (dict): A dictionary representing a single raw record.
-    Returns:
-        RawPropertyListing: An instance of RawPropertyListing containing the processed data.
-    """
+def _required_csv_value(
+    raw_record: dict[str, str | None], field_name: str
+) -> str:
+    value = raw_record.get(field_name)
+    if value is None:
+        raise PropertyRawDataValidationError(
+            f"Missing required CSV value for {field_name}"
+        )
+    return value
+
+
+def _optional_csv_value(
+    raw_record: dict[str, str | None], field_name: str, default: str = ""
+) -> str:
+    value = raw_record.get(field_name)
+    return default if value is None else value
+
+
+def parse_raw_property_listing(
+    raw_record: dict[str, str | None],
+) -> RawPropertyListing:
+    """Convert a CSV row into a validated raw property listing."""
     try:
-        id = raw_record.get("id", "")
-        date_of_sale = date_parser.parse(raw_record["Date of Sale (dd/mm/yyyy)"]).date()
-        county = raw_record["County"]
-        price = raw_record["Price (Ć)"]
-        description = raw_record.get("Description of Property", "")
-        address = raw_record.get("Address", "")
-        is_vat_exclusive = raw_record.get("VAT Exclusive", "No") == "Yes"
-        size_description = raw_record.get("Property Size Description", "")
-        is_full_market_price = raw_record.get("Not Full Market Price", "No") == "No"
+        id = _optional_csv_value(raw_record, "id")
+        date_of_sale = date_parser.parse(
+            _required_csv_value(raw_record, "Date of Sale (dd/mm/yyyy)")
+        ).date()
+        county = _required_csv_value(raw_record, "County")
+        price = _required_csv_value(raw_record, "Price (Ć)")
+        description = _optional_csv_value(raw_record, "Description of Property")
+        address = _optional_csv_value(raw_record, "Address")
+        is_vat_exclusive = (
+            _optional_csv_value(raw_record, "VAT Exclusive", "No") == "Yes"
+        )
+        size_description = _optional_csv_value(
+            raw_record, "Property Size Description"
+        )
+        is_full_market_price = (
+            _optional_csv_value(raw_record, "Not Full Market Price", "No") == "No"
+        )
 
         return RawPropertyListing(
             date_of_sale=date_of_sale,
@@ -67,22 +88,16 @@ def process_raw_record(raw_record: dict) -> RawPropertyListing:
         ) from e
 
 
-def process_raw_property_listing(
+def clean_listing_with_outcome(
     raw_listing: RawPropertyListing,
-) -> RawRecordProcessOutcome:
-    """
-    Process a RawPropertyListing and convert it into a CleanedPropertyListing.
-    Args:
-        raw_listing (RawPropertyListing): An instance of RawPropertyListing to process.
-    Returns:
-        RawRecordProcessOutcome: The outcome of the processing operation.
-    """
+) -> ListingProcessingOutcome:
+    """Clean a listing and return either the cleaned listing or its validation error."""
     try:
         price = parse_currency(raw_listing.price)
         price = adjust_price_for_vat(price, raw_listing.is_vat_exclusive)
-        area_sqm = parse_sqm(raw_listing.size_description)
+        area_sqm = parse_area_sqm(raw_listing.size_description)
         price_per_sq_m = price / area_sqm
-        return RawRecordProcessOutcome(
+        return ListingProcessingOutcome(
             row_number=raw_listing.id,
             outcome=CleanedPropertyListing(
                 id=raw_listing.id,
@@ -103,7 +118,7 @@ def process_raw_property_listing(
         TypeError,
         ArithmeticError,
     ) as e:
-        return RawRecordProcessOutcome(
+        return ListingProcessingOutcome(
             row_number=raw_listing.id,
             outcome=PropertyRawDataValidationError(
                 f"Error processing record at row {raw_listing.id}: {e}"
@@ -111,16 +126,10 @@ def process_raw_property_listing(
         )
 
 
-def report_ingestion_run(
-    processed_records: list[RawRecordProcessOutcome],
+def summarize_ingestion_run(
+    processed_records: list[ListingProcessingOutcome],
 ) -> IngestionRunReport:
-    """
-    Generate a report summarizing the results of an ingestion run.
-    Args:
-        processed_records (list[RawRecordProcessOutcome]): A list of RawRecordProcessOutcome instances.
-    Returns:
-        IngestionRunReport: A report summarizing the ingestion run.
-    """
+    """Count successful and failed listings in an ingestion run."""
     total_records = len(processed_records)
     successful_records = sum(
         1

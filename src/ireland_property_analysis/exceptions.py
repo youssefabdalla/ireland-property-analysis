@@ -1,5 +1,5 @@
 class PropertyError(Exception):
-    """Base class for exceptions in this module."""
+    """Base class for property data errors."""
     note: str
 
     def __init__(self, note: str):
@@ -8,4 +8,4 @@ class PropertyError(Exception):
 
 
 class PropertyRawDataValidationError(PropertyError):
-    """Exception raised for errors in the raw property data."""
+    """Raised when a property record fails validation."""

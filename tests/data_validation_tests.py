@@ -7,11 +7,11 @@ from ireland_property_analysis.exceptions import PropertyRawDataValidationError
 from ireland_property_analysis.schema import RawPropertyListing
 from ireland_property_analysis.utils import (
     adjust_price_for_vat,
+    parse_area_sqm,
     parse_currency,
-    parse_sqm,
 )
 
-# ROOT = get_root_dir()
+# ROOT = find_project_root()
 # SRC = ROOT / "src"
 # if str(SRC) not in sys.path:
 #     sys.path.insert(0, str(SRC))
@@ -80,13 +80,13 @@ def test_parse_currency_returns_zero_for_none():
     ],
 )
 def test_parse_sqm_extracts_area(raw_area, expected):
-    assert parse_sqm(raw_area) == expected
+    assert parse_area_sqm(raw_area) == expected
 
 
 @pytest.mark.parametrize("raw_area", ["", "no area specified"])
 def test_parse_sqm_rejects_missing_or_invalid_area(raw_area):
     with pytest.raises(PropertyRawDataValidationError):
-        parse_sqm(raw_area)
+        parse_area_sqm(raw_area)
 
 
 @pytest.mark.parametrize(

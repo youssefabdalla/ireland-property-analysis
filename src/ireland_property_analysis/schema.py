@@ -7,10 +7,7 @@ from ireland_property_analysis.exceptions import PropertyRawDataValidationError
 
 @dataclass(frozen=True, kw_only=True)
 class RawPropertyListing:
-    """
-    Represents a raw property listing with basic information as from
-    [the irish property register](https://www.propertyregister.ie)
-    """
+    """A property listing parsed from the source data."""
 
     date_of_sale: date
     county: str
@@ -29,10 +26,7 @@ class RawPropertyListing:
 
 @dataclass(frozen=True, kw_only=True)
 class CleanedPropertyListing:
-    """
-    Represents a cleaned property listing with basic information as from
-    [the irish property register](https://www.propertyregister.ie)
-    """
+    """A validated property listing with parsed price and area values."""
 
     id: str
     date_of_sale: date
@@ -55,27 +49,16 @@ class CleanedPropertyListing:
 
 
 @dataclass(frozen=True)
-class RawRecordProcessOutcome:
-    """
-    Represents the outcome of processing raw records.
-    Attributes:
-        row_number (str): The row number of the processed record.
-        outcome (CleanedPropertyListing | PropertyRawDataValidationError): The outcome of the processing operation.
-    """
+class ListingProcessingOutcome:
+    """The cleaned listing or validation error for one source row."""
 
     row_number: str
     outcome: CleanedPropertyListing | PropertyRawDataValidationError
 
+
 @dataclass(frozen=True)
 class IngestionRunReport:
-    """
-    Represents the outcome of an ingestion run.
-    Attributes:
-        total_records (int): The total number of records processed.
-        successful_records (int): The number of successfully processed records.
-        failed_records (int): The number of failed records.
-        errors (dict[str, PropertyRawDataValidationError]): A dictionary of errors encountered during processing.
-    """
+    """Counts and errors for one ingestion run."""
 
     total_records: int
     successful_records: int
