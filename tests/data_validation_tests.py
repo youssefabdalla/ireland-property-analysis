@@ -38,7 +38,7 @@ def test_valid_property_data_is_accepted(valid_property_data):
 
     assert property_listing.date_of_sale == date(2010, 1, 4)
     assert property_listing.county == "Dublin"
-    assert property_listing.price == "Ć365,110.13"
+    assert property_listing.price == "€365,110.13"
     assert property_listing.is_full_market_price is False
 
 

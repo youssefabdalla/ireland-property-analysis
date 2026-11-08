@@ -26,6 +26,8 @@ python_files = [
     "*_test.py",
     "*_tests.py",
 ]
+[tool.poetry.scripts]
+clean-properties = "ireland_property_analysis.cli.clean_properties_cli:cli"
 
 [tool.ruff]
 target-version = "py312"

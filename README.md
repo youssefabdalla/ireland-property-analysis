@@ -17,6 +17,9 @@ This project is still in progress. The core project structure, environment boots
 
 ## What has been implemented so far
 
+If you use uv to manage python runtimes then do this once:
+`poetry env use "$(uv python find --managed-python 3.13)"`
+
 ### 1) Environment setup
 Use [scripts/bootstrap.sh](scripts/bootstrap.sh) to set up the local Python environment. It requires Python 3.12 or 3.13, installs Poetry if needed, and uses the tracked `poetry.lock` to install the project and development dependencies into `.venv`. The script checks for a valid existing environment and recreates it if it is missing or broken.
 

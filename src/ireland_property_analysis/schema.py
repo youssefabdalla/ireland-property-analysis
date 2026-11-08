@@ -13,6 +13,7 @@ class RawPropertyListing:
     county: str
     price: str
     description: str
+    eircode: str = ""
     id: str = ""
     address: str = ""
     is_vat_exclusive: bool = False
@@ -20,8 +21,17 @@ class RawPropertyListing:
     is_full_market_price: bool = True
 
     def __post_init__(self):
-        if self.price.isspace() or not self.price:
-            raise PropertyRawDataValidationError("price cannot be empty or whitespace")
+        if any(
+            value is None
+            for value in (self.date_of_sale, self.county, self.price, self.description)
+        ):
+            raise PropertyRawDataValidationError(
+                "date_of_sale, county, price, and description must not be None"
+            )
+        if not isinstance(self.price, str) or not self.price.strip():
+            raise PropertyRawDataValidationError("price must be a non-empty string")
+        if "Ć" in self.price:
+            object.__setattr__(self, "price", self.price.replace("Ć", "€"))
 
 
 @dataclass(frozen=True, kw_only=True)
